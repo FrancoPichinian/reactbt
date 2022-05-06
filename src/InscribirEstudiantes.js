@@ -39,6 +39,30 @@ export default class InscribirEstudiantes extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
+    fetch("http://localhost:1234/estudiantes", {
+          method: "POST", 
+          body: JSON.stringify({
+            nombre: this.state.form.nombre,
+            apellido: this.state.form.apellido,
+            cursos: [this.state.form.curso],
+          })
+      })
+      .then((resp) => resp.json())
+      .then((json) => {
+          if(json.result === "error") {
+              this.setState ({
+                resultado: json.message,
+                errors: json.errors,
+                show: false,
+              })
+              return;
+          }
+          this.setState ({
+            resultado: "El estudiante fue creado con éxito",
+            errors: {},
+            show: true,
+          })
+      })
   }
 
   componentDidMount() {
